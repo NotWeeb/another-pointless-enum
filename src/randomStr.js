@@ -1,0 +1,11 @@
+/**
+ * I stole this from: https://stackoverflow.com/a/1349426
+ * @param length
+ * @returns {string}
+ */
+module.exports = length => {
+	let result = '';
+	let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	for (let i = 0; i < length; i++) result += characters.charAt(Math.floor(Math.random() * characters.length));
+	return result;
+};

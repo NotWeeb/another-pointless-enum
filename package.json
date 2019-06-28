@@ -1,0 +1,24 @@
+{
+  "name": "another-pointless-enum",
+  "version": "1.0.0",
+  "description": "Another really badly coded and pointless attempt at bringing enums to JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NotWeeb/another-pointless-enum.git"
+  },
+  "keywords": [
+    "enum",
+    "pointless",
+    "bad"
+  ],
+  "author": "NotWeeb7777",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NotWeeb/another-pointless-enum/issues"
+  },
+  "homepage": "https://github.com/NotWeeb/another-pointless-enum#readme"
+}
