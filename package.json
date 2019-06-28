@@ -1,6 +1,6 @@
 {
   "name": "another-pointless-enum",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Another really badly coded and pointless attempt at bringing enums to JavaScript.",
   "main": "index.js",
   "scripts": {
