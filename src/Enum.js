@@ -30,9 +30,9 @@ class EnumClass {
 	 */
 	_defaultValue (key) {
 		if (typeof key === 'object' && Array.isArray(key)) {
-			return "enum::" + key[0].toUpperCase();
+			return key[0].toUpperCase();
 		} else {
-			return "enum::" + key.toUpperCase();
+			return key.toUpperCase();
 		}
 	}
 	
@@ -89,6 +89,8 @@ class EnumClass {
 		let key = keyOrArr;
 		let val = this._defaultValue(key);
 		
+		let custom = true;
+		
 		if (typeof keyOrArr === 'object' && Array.isArray(keyOrArr)) {
 			const [newKey, newVal = this._defaultValue(newKey)] = keyOrArr;
 			key = newKey;
@@ -104,7 +106,11 @@ class EnumClass {
 		if (!updating && this.has(key)) throw `A key with name "${key.toUpperCase()}" already exists.`;
 		if (Object.getOwnPropertyNames(this).includes(key)) throw `Illegal enum key.`;
 		
-		Object.defineProperty(this, key.toUpperCase(), { get: () => `enum::custom::${val.replace(/[^A-z\s\d][\\^]?|[ +]/g, '.').replace(/\.+/g, '.')}`, configurable: true });
+		if (val === this._defaultValue(key)) {
+			custom = false;
+		}
+		
+		Object.defineProperty(this, key.toUpperCase(), { get: () => `enum::${custom && "<custom>::" || ""}${val.replace(/[^A-z\s\d][\\^]?|[ +]/g, '.').replace(/\.+/g, '.')}`, configurable: true });
 		
 		return this[key.toUpperCase()];
 		
