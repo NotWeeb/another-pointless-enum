@@ -1,12 +1,12 @@
 const random = require("./randomStr.js");
 
 
-class EnumClass {
+class EnumCreator {
 	
 	/**
 	 * @param enums
 	 * @param allowDuplicateValues
-	 * @returns {EnumClass}
+	 * @returns {EnumCreator}
 	 */
 	constructor(
 		enums = [],
@@ -14,7 +14,6 @@ class EnumClass {
 	) {
 		
 		this._values = new Map();
-		this._defaultValues = [];
 		
 		this.allowDuplicateValues = allowDuplicateValues;
 		
@@ -120,9 +119,9 @@ class EnumClass {
 
 /**
  * @param args
- * @returns {EnumClass}
+ * @returns {EnumCreator}
  * @constructor
  */
-global.Enum = function(...args) {
-	return new.target ? this.constructor(...args) : new EnumClass(...args)
-};
+exports = {OldEnum: function(...args) {
+	return new.target ? this.constructor(...args) : new EnumCreator(...args)
+}};

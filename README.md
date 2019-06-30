@@ -5,33 +5,46 @@
 
 ### Usage
 ```javascript
-require('another-pointless-enum')
-// Enum is set as a global, sorry not sorry
-// will consider changing if reported as issue on repo
 
-const Health = Enum([
-	"LOW",
-	["MEDIUM", "some custom value"],
-	"HIGH"
-]);
+// we now require the package like other normal packages
+const Enum = require("another-pointless-enum");
 
-// returns value of updated key
-health.update("LOW", "some new custom value");
+// (NOT RECOMMENDED) and if you're ever so inclined, you can mess with the old enum creator
+const { OldEnum } = require("another-pointless-enum");
+// note: OldEnum is documented in an old version of this package, view that for reference, this readme does not apply to the old versions
 
-// returns the value of set key
-health.set("EMPTY");
-health.set("EMPTY", "some custom value");
-health.set([
-	"SAME",
-	["AS", "the"],
-	"constructor" // note that this will automatically set to uppercase for enums
-]);
+// arguments for the Enum class are flexible and handled within the class
+const Games = new Enum(
+	{
+	    // throws errors when you try to do stuff you shouldn't or cant do
+		strict: true,
+		// allow the ability to create multiple enums with the same values
+		allowDuplicateValues: false,
+		// allows for editing of the enums (WIP)
+		editableEnums: false
+	},
+	
+	// a single string/enum that will be automatically provided a value
+	"A",
+	// defining an enum that will be given a value of your choosing
+	["B", "custom value"],
+	// you can also do this but why would you do this?
+	["C"],
+	
+	// a prime example of nested arrays
+	[
+		["E", "customize me E"],
+		["F", "customize me F"],
+		[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[["why_am_i_like_this"]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+	]
+	
+);
 
-// this also works by default
-health.set(["no_key"])
 
-// returns true or false
-health.has("EMPTY"); 
+Games.has("H"); // returns a boolean
+
+// the ability to set enums outside of the class' constructor
+Games.set("I", "more custom values");
 
 ```
 

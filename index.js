@@ -1,3 +1,7 @@
-require("./src/Enum");
+const { EnumCreator } = require("./dist/EnumCreator");
+const { OldEnum } = require("./src__old/EnumCreator");
 
-// truly the dumbest thing i've ever made :^)
+// for those who want to keep using the old version (god knows why you would)
+EnumCreator.OldEnum = OldEnum;
+
+module.exports = EnumCreator;
