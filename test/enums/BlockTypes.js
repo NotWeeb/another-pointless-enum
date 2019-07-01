@@ -2,7 +2,6 @@ const Enum = require("../.."); // require("another-pointless-enum")
 
 const enumSettings = {
 	strict: true,
-	allowDuplicateValues: false,
 	editableEnums: false
 };
 
@@ -16,7 +15,7 @@ const enums = [
 			"LAVA",
 			"MEME",
 			"gamers",
-			"lmao"
+			{"lmao": 2}
 		]
 	]
 ];

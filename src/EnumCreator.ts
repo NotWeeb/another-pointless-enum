@@ -1,9 +1,5 @@
 
-
-
 export class EnumCreator {
-
-
 
 
     private _keys: string[];
@@ -39,7 +35,7 @@ export class EnumCreator {
             switch (typeof arg) {
                 case 'object': Array.isArray(arg) ? this._definePotentialMultiple(arg) : this._handleOptions(arg); break;
                 case 'string': this._define(arg); break;
-                default: throw new TypeError(`Invalid argument detected: "${typeof arg}" was provided. Expected STRING, ARRAY, OBJECT.`);
+                default: this._HandleError(new TypeError(`Invalid argument detected: "${typeof arg}" was provided. Expected STRING, ARRAY, OBJECT.`)); break;
             }
         }
 
@@ -47,8 +43,10 @@ export class EnumCreator {
         return this.enums;
     }
 
-
-
+    private _HandleError (E : (Error | TypeError | RangeError | SyntaxError)) {
+        E.stack = E.stack && E.stack.split("\n").filter(line => !/(another-pointless-enum)/.test(line)).join("\n") || "No stack found.";
+        throw E;
+    }
 
     /**
      * Serves literally no purpose, use .set() instead.
@@ -115,11 +113,11 @@ export class EnumCreator {
 
             const err = new TypeError("Invalid option. Please check README for valid options.");
             // @ts-ignore
-            if (!this._allowedOptions.includes(opt)) throw err;
+            if (!this._allowedOptions.includes(opt)) return this._HandleError(err);
 
             if (!sameValueType) {
                 err.message = "Invalid option value. Values must be the same as specified in the README.";
-                throw err;
+                return this._HandleError(err);
             }
 
             Object.defineProperty(this, opt, {
@@ -175,7 +173,7 @@ export class EnumCreator {
      * @return {void}
      */
     private _definePotentialMultiple (arg : object) : void {
-        if (typeof arg === "object" && !Array.isArray(arg)) throw new TypeError("You cannot define objects as an enum. (Yet?)");
+        if (typeof arg === "object" && !Array.isArray(arg)) return this._HandleError(new TypeError("You cannot define objects as an enum. (Yet?)"));
 
         const [index, second] = arg;
 
@@ -234,7 +232,7 @@ export class EnumCreator {
      * @return {string|number}
      */
     private _define (arg : (string | object)) : any {
-        if (typeof arg === "object" && !Array.isArray(arg)) throw new TypeError("You cannot define objects as an enum. (Yet?)");
+        if (typeof arg === "object" && !Array.isArray(arg)) return this._HandleError(new TypeError("You cannot define objects as an enum. (Yet?)"));
 
         let key = arg,
             value: string;
@@ -251,8 +249,8 @@ export class EnumCreator {
         }
 
         // @ts-ignore
-        if (!["string", "number"].includes(typeof value)) throw new TypeError(`"${value}" is type ${(typeof value).toUpperCase()}. Expected type STRING or NUMBER.`);
-        if (typeof key !== "string") throw new TypeError(`"${key}" is type ${(typeof key).toUpperCase()}. Enum names must be type STRING`);
+        if (!["string", "number"].includes(typeof value)) return this._HandleError(new TypeError(`"${value}" is type ${(typeof value).toUpperCase()}. Expected type STRING or NUMBER.`));
+        if (typeof key !== "string") return this._HandleError(new TypeError(`"${key}" is type ${(typeof key).toUpperCase()}. Enum names must be type STRING`));
         // @ts-ignore
         key = key.toUpperCase();
 
@@ -270,7 +268,7 @@ export class EnumCreator {
         // @ts-ignore
         const existingType = keyExists ? key : value;
 
-        if (this.strict && (keyExists || valueExists)) throw new Error(`There is already an enum with the ${keyExists ? "name" : "value"}: "${existingType}".`);
+        if (this.strict && (keyExists || valueExists)) return this._HandleError(new Error(`There is already an enum with the ${keyExists ? "name" : "value"}: "${existingType}".`));
 
         // @ts-ignore
         this._keys.push(key);

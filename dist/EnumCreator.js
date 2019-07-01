@@ -32,12 +32,18 @@ var EnumCreator = /** @class */ (function () {
                 case 'string':
                     this._define(arg);
                     break;
-                default: throw new TypeError("Invalid argument detected: \"" + typeof arg + "\" was provided. Expected STRING, ARRAY, OBJECT.");
+                default:
+                    this._HandleError(new TypeError("Invalid argument detected: \"" + typeof arg + "\" was provided. Expected STRING, ARRAY, OBJECT."));
+                    break;
             }
         }
         // @ts-ignore
         return this.enums;
     }
+    EnumCreator.prototype._HandleError = function (E) {
+        E.stack = E.stack && E.stack.split("\n").filter(function (line) { return !/(another-pointless-enum)/.test(line); }).join("\n") || "No stack found.";
+        throw E;
+    };
     /**
      * Serves literally no purpose, use .set() instead.
      * @param {string} key
@@ -88,10 +94,10 @@ var EnumCreator = /** @class */ (function () {
             var err = new TypeError("Invalid option. Please check README for valid options.");
             // @ts-ignore
             if (!this_1._allowedOptions.includes(opt))
-                throw err;
+                return { value: this_1._HandleError(err) };
             if (!sameValueType) {
                 err.message = "Invalid option value. Values must be the same as specified in the README.";
-                throw err;
+                return { value: this_1._HandleError(err) };
             }
             Object.defineProperty(this_1, opt, {
                 get: function () { return options[opt]; },
@@ -101,7 +107,9 @@ var EnumCreator = /** @class */ (function () {
         var this_1 = this;
         for (var _i = 0, optionNames_1 = optionNames; _i < optionNames_1.length; _i++) {
             var opt = optionNames_1[_i];
-            _loop_1(opt);
+            var state_1 = _loop_1(opt);
+            if (typeof state_1 === "object")
+                return state_1.value;
         }
     };
     ;
@@ -139,7 +147,7 @@ var EnumCreator = /** @class */ (function () {
     EnumCreator.prototype._definePotentialMultiple = function (arg) {
         var _this = this;
         if (typeof arg === "object" && !Array.isArray(arg))
-            throw new TypeError("You cannot define objects as an enum. (Yet?)");
+            return this._HandleError(new TypeError("You cannot define objects as an enum. (Yet?)"));
         var index = arg[0], second = arg[1];
         if (typeof index === "object" && Array.isArray(index) || typeof second === "object" && Array.isArray(second)) {
             for (var _i = 0, arg_1 = arg; _i < arg_1.length; _i++) {
@@ -195,7 +203,7 @@ var EnumCreator = /** @class */ (function () {
      */
     EnumCreator.prototype._define = function (arg) {
         if (typeof arg === "object" && !Array.isArray(arg))
-            throw new TypeError("You cannot define objects as an enum. (Yet?)");
+            return this._HandleError(new TypeError("You cannot define objects as an enum. (Yet?)"));
         var key = arg, value;
         switch (typeof arg) {
             case 'string':
@@ -210,9 +218,9 @@ var EnumCreator = /** @class */ (function () {
         }
         // @ts-ignore
         if (!["string", "number"].includes(typeof value))
-            throw new TypeError("\"" + value + "\" is type " + (typeof value).toUpperCase() + ". Expected type STRING or NUMBER.");
+            return this._HandleError(new TypeError("\"" + value + "\" is type " + (typeof value).toUpperCase() + ". Expected type STRING or NUMBER."));
         if (typeof key !== "string")
-            throw new TypeError("\"" + key + "\" is type " + (typeof key).toUpperCase() + ". Enum names must be type STRING");
+            return this._HandleError(new TypeError("\"" + key + "\" is type " + (typeof key).toUpperCase() + ". Enum names must be type STRING"));
         // @ts-ignore
         key = key.toUpperCase();
         key = key
@@ -227,7 +235,7 @@ var EnumCreator = /** @class */ (function () {
         // @ts-ignore
         var existingType = keyExists ? key : value;
         if (this.strict && (keyExists || valueExists))
-            throw new Error("There is already an enum with the " + (keyExists ? "name" : "value") + ": \"" + existingType + "\".");
+            return this._HandleError(new Error("There is already an enum with the " + (keyExists ? "name" : "value") + ": \"" + existingType + "\"."));
         // @ts-ignore
         this._keys.push(key);
         // @ts-ignore
