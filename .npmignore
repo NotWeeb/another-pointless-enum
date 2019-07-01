@@ -1,0 +1,7 @@
+.gitattributes
+.gitignore
+.github/
+.git/
+test/
+src/
+tsconfig.json
