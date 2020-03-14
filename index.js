@@ -5,6 +5,3 @@ const { OldEnum } = require("./src__old/EnumCreator");
 EnumCreator.OldEnum = OldEnum;
 
 module.exports = EnumCreator;
-
-
-// joniel
